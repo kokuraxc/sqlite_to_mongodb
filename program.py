@@ -1,6 +1,7 @@
 import pymongo
 import sqlite3
 from sqlite3 import Error
+from datetime import datetime
 
 
 def write_to_mongo(report_):
@@ -32,6 +33,12 @@ def select_by_rscode(conn, rscode):
     rows = cur.fetchall()
     for row in rows:
         print(row)
+        timestamp_to_dt(row[5]/1000)
+
+
+def timestamp_to_dt(ts):
+    dt = datetime.fromtimestamp(ts)
+    print(dt)
 
 
 def main():
