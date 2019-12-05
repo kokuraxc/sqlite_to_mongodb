@@ -1,7 +1,13 @@
 import pymongo
+import sqlite3
+from sqlite3 import Error
 
-client = pymongo.MongoClient()
-reports = client['universal-dashboard']['reports']
+
+def write_to_mongo(report_):
+    client = pymongo.MongoClient()
+    reports = client['universal-dashboard']['reports']
+    reports.insert_one(report_)
+
 
 report = {
     '_id': 201907,
@@ -9,5 +15,31 @@ report = {
     'off18': 3,
     'setup': 12,
 }
-x = reports.insert_one(report)
-print(x)
+
+
+def create_sqlite_connection(db_file):
+    conn = None
+    try:
+        conn = sqlite3.connect(db_file)
+    except Error as e:
+        print(e)
+    return conn
+
+
+def select_by_rscode(conn, rscode):
+    cur = conn.cursor()
+    cur.execute('SELECT * FROM mainTable WHERE rscode=?', (rscode,))
+    rows = cur.fetchall()
+    for row in rows:
+        print(row)
+
+
+def main():
+    database = 'reasonCodeStamp.db'
+    conn = create_sqlite_connection(database)
+    with conn:
+        select_by_rscode(conn, 'Fixture installation')
+
+
+if __name__ == '__main__':
+    main()
