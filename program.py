@@ -3,6 +3,7 @@ import sqlite3
 from sqlite3 import Error
 from datetime import datetime, time
 import time as ctime
+import pprint
 
 
 def write_to_mongo(report_):
@@ -132,7 +133,7 @@ def main():
             if is_in_report_18(dt.time()) or bar_key in bar_key_18_hour_shift_exception:
                 reports[bar_key][REPORT18][monthly_key] = reports[bar_key][REPORT18].get(monthly_key, 0) + 1
                 reports[bar_key][REPORT18][daily_key] = reports[bar_key][REPORT18].get(daily_key, 0) + 1
-    print(reports)
+    pprint.pprint(reports)
 
 
 if __name__ == '__main__':
