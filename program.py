@@ -36,6 +36,15 @@ def select_by_rscode(conn, rscode):
         timestamp_to_dt(row[5]/1000)
 
 
+def count_all(conn):
+    cur = conn.cursor()
+    cur.execute('SELECT COUNT (*) as count FROM mainTable')
+    rows = cur.fetchall()
+    for row in rows:
+        print(row)
+    print(rows[0][0])
+
+
 def timestamp_to_dt(ts):
     dt = datetime.fromtimestamp(ts)
     print(dt)
@@ -45,7 +54,8 @@ def main():
     database = 'reasonCodeStamp.db'
     conn = create_sqlite_connection(database)
     with conn:
-        select_by_rscode(conn, 'Fixture installation')
+        # select_by_rscode(conn, 'Fixture installation')
+        count_all(conn)
 
 
 if __name__ == '__main__':
