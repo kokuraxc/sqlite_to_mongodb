@@ -82,16 +82,7 @@ def main():
     ERDT = 'Engineering repair development trials'
     PREVENTIVE_MAINTENANCE = 'Preventive maintenance'
     BREAK_DOWN = 'Break down'
-    reports = {IDLE: {REPORT18: {}, REPORT24: {}},
-               SETUP_DRYRUN: {REPORT18: {}, REPORT24: {}},
-               MACHINING: {REPORT18: {}, REPORT24: {}},
-               OFF: {REPORT18: {}, REPORT24: {}},
-               LOAD_UNLOAD: {REPORT18: {}, REPORT24: {}},
-               FIXTURE_INSTALLATION: {REPORT18: {}, REPORT24: {}},
-               ERDT: {REPORT18: {}, REPORT24: {}},
-               PREVENTIVE_MAINTENANCE: {REPORT18: {}, REPORT24: {}},
-               BREAK_DOWN: {REPORT18: {}, REPORT24: {}},
-               }
+    reports = {}
     all_reason_codes = [LOAD_UNLOAD, FIXTURE_INSTALLATION, ERDT, PREVENTIVE_MAINTENANCE, BREAK_DOWN]
     bar_key_18_hour_shift_exception = [ERDT, SETUP_DRYRUN, MACHINING]
 
@@ -121,13 +112,61 @@ def main():
                 else:
                     bar_key = OFF
 
+            if monthly_key not in reports:
+                reports[monthly_key] = {
+                    REPORT24: {
+                    IDLE: 0,
+                    SETUP_DRYRUN: 0,
+                    MACHINING: 0,
+                    OFF: 0,
+                    LOAD_UNLOAD: 0,
+                    FIXTURE_INSTALLATION: 0,
+                    ERDT: 0,
+                    PREVENTIVE_MAINTENANCE: 0,
+                    BREAK_DOWN: 0,
+                },
+                    REPORT18: {
+                    IDLE: 0,
+                    SETUP_DRYRUN: 0,
+                    MACHINING: 0,
+                    OFF: 0,
+                    LOAD_UNLOAD: 0,
+                    FIXTURE_INSTALLATION: 0,
+                    ERDT: 0,
+                    PREVENTIVE_MAINTENANCE: 0,
+                    BREAK_DOWN: 0,
+                }}
+            if daily_key not in reports:
+                reports[daily_key] = {
+                    REPORT24: {
+                    IDLE: 0,
+                    SETUP_DRYRUN: 0,
+                    MACHINING: 0,
+                    OFF: 0,
+                    LOAD_UNLOAD: 0,
+                    FIXTURE_INSTALLATION: 0,
+                    ERDT: 0,
+                    PREVENTIVE_MAINTENANCE: 0,
+                    BREAK_DOWN: 0,
+                },
+                    REPORT18: {
+                    IDLE: 0,
+                    SETUP_DRYRUN: 0,
+                    MACHINING: 0,
+                    OFF: 0,
+                    LOAD_UNLOAD: 0,
+                    FIXTURE_INSTALLATION: 0,
+                    ERDT: 0,
+                    PREVENTIVE_MAINTENANCE: 0,
+                    BREAK_DOWN: 0,
+                }}
             # 24 hour shift reports
-            reports[bar_key][REPORT24][monthly_key] = reports[bar_key][REPORT24].get(monthly_key, 0) + 1
-            reports[bar_key][REPORT24][daily_key] = reports[bar_key][REPORT24].get(daily_key, 0) + 1
+            reports[monthly_key][REPORT24][bar_key] = reports[monthly_key][REPORT24][bar_key] + 1
+            reports[daily_key][REPORT24][bar_key] = reports[daily_key][REPORT24][bar_key] + 1
             # 18 hour shift reports
             if is_in_report_18(dt.time()) or bar_key in bar_key_18_hour_shift_exception:
-                reports[bar_key][REPORT18][monthly_key] = reports[bar_key][REPORT18].get(monthly_key, 0) + 1
-                reports[bar_key][REPORT18][daily_key] = reports[bar_key][REPORT18].get(daily_key, 0) + 1
+                reports[monthly_key][REPORT18][bar_key] = reports[monthly_key][REPORT18][bar_key] + 1
+                reports[daily_key][REPORT18][bar_key] = reports[daily_key][REPORT18][bar_key] + 1
     pprint.pprint(reports)
 
 
