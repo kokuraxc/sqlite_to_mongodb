@@ -102,16 +102,18 @@ def main():
             reason_code = row[4]
 
             if reason_code in all_reason_codes:
-                bar_key = reason_code
+                rs_key = reason_code
             else:
-                if row[0] == 1:
-                    bar_key = IDLE
-                elif row[1] == 1:
-                    bar_key = SETUP_DRYRUN
-                elif row[2] == 1:
-                    bar_key = MACHINING
-                else:
-                    bar_key = OFF
+                rs_key = None
+
+            if row[0] == 1:
+                status_key = IDLE
+            elif row[1] == 1:
+                status_key = SETUP_DRYRUN
+            elif row[2] == 1:
+                status_key = MACHINING
+            else:
+                status_key = OFF
 
             if monthly_key not in reports:
                 reports[monthly_key] = {
@@ -162,12 +164,18 @@ def main():
                     BREAK_DOWN: 0,
                 }}
             # 24 hour shift reports
-            reports[monthly_key][REPORT24][bar_key] = reports[monthly_key][REPORT24][bar_key] + 1
-            reports[daily_key][REPORT24][bar_key] = reports[daily_key][REPORT24][bar_key] + 1
+            reports[monthly_key][REPORT24][status_key] = reports[monthly_key][REPORT24][status_key] + 1
+            reports[daily_key][REPORT24][status_key] = reports[daily_key][REPORT24][status_key] + 1
+            if rs_key is not None:
+                reports[monthly_key][REPORT24][rs_key] = reports[monthly_key][REPORT24][rs_key] + 1
+                reports[daily_key][REPORT24][rs_key] = reports[daily_key][REPORT24][rs_key] + 1
             # 18 hour shift reports
-            if is_in_report_18(dt.time()) or bar_key in bar_key_18_hour_shift_exception:
-                reports[monthly_key][REPORT18][bar_key] = reports[monthly_key][REPORT18][bar_key] + 1
-                reports[daily_key][REPORT18][bar_key] = reports[daily_key][REPORT18][bar_key] + 1
+            if is_in_report_18(dt.time()) or status_key == SETUP_DRYRUN or status_key == MACHINING or rs_key == ERDT:
+                reports[monthly_key][REPORT18][status_key] = reports[monthly_key][REPORT18][status_key] + 1
+                reports[daily_key][REPORT18][status_key] = reports[daily_key][REPORT18][status_key] + 1
+                if rs_key is not None:
+                    reports[monthly_key][REPORT18][rs_key] = reports[monthly_key][REPORT18][rs_key] + 1
+                    reports[daily_key][REPORT18][rs_key] = reports[daily_key][REPORT18][rs_key] + 1
     # pprint.pprint(reports)
     print("reading from sqlite and processing --- %s seconds ---" % (ctime.time() - start_time))
     start_time = ctime.time()
