@@ -98,11 +98,7 @@ def main():
     database = 'reasonCodeStamp.db'
     conn = create_sqlite_connection(database)
     with conn:
-        # select_by_rscode(conn, 'Fixture installation')
-        # count_all(conn)
-        # test_time()
         cur = conn.cursor()
-        # cur.execute('SELECT * FROM mainTable WHERE rscode=?', ('Fixture installation',))
         cur.execute('SELECT * FROM mainTable ')  # all records
         rows = cur.fetchall()
         for row in rows:
@@ -111,11 +107,8 @@ def main():
             monthly_key = dt.year * 100 + dt.month
             daily_key = dt.year * 10000 + dt.month * 100 + dt.day
             # print(monthly_key, daily_key)
-            # reports.get(monthly_key, {})
-            cat = ''
             reason_code = row[4]
 
-            bar_key = None
             if reason_code in all_reason_codes:
                 bar_key = reason_code
             else:
@@ -128,8 +121,10 @@ def main():
                 else:
                     bar_key = OFF
 
+            # 24 hour shift reports
             reports[bar_key][REPORT24][monthly_key] = reports[bar_key][REPORT24].get(monthly_key, 0) + 1
             reports[bar_key][REPORT24][daily_key] = reports[bar_key][REPORT24].get(daily_key, 0) + 1
+            # 18 hour shift reports
             if is_in_report_18(dt.time()) or bar_key in bar_key_18_hour_shift_exception:
                 reports[bar_key][REPORT18][monthly_key] = reports[bar_key][REPORT18].get(monthly_key, 0) + 1
                 reports[bar_key][REPORT18][daily_key] = reports[bar_key][REPORT18].get(daily_key, 0) + 1
