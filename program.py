@@ -1,7 +1,7 @@
 import pymongo
 import sqlite3
 from sqlite3 import Error
-from datetime import datetime
+from datetime import datetime, time
 
 
 def write_to_mongo(report_):
@@ -50,12 +50,22 @@ def timestamp_to_dt(ts):
     print(dt)
 
 
+def test_time():
+    t1 = time.fromisoformat('04:23:01')
+    t2 = time.fromisoformat('10:22:00')
+    print(t1 > t2)
+    dt1 = datetime(2019, 10, 11, 5, 10, 0)
+    dt2 = datetime(2019, 10, 12, 3, 1, 0)
+    print(dt1.time() > dt2.time())
+
+
 def main():
     database = 'reasonCodeStamp.db'
     conn = create_sqlite_connection(database)
     with conn:
         # select_by_rscode(conn, 'Fixture installation')
-        count_all(conn)
+        # count_all(conn)
+        test_time()
 
 
 if __name__ == '__main__':
