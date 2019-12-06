@@ -71,6 +71,7 @@ def is_in_report_18(time_):
 
 
 def main():
+    start_time = ctime.time()
     REPORT18 = 'Report 18'
     REPORT24 = 'Report 24'
     IDLE = 'Idle'
@@ -167,10 +168,25 @@ def main():
             if is_in_report_18(dt.time()) or bar_key in bar_key_18_hour_shift_exception:
                 reports[monthly_key][REPORT18][bar_key] = reports[monthly_key][REPORT18][bar_key] + 1
                 reports[daily_key][REPORT18][bar_key] = reports[daily_key][REPORT18][bar_key] + 1
-    pprint.pprint(reports)
+    # pprint.pprint(reports)
+    print("reading from sqlite and processing --- %s seconds ---" % (ctime.time() - start_time))
+    start_time = ctime.time()
+
+    client = pymongo.MongoClient()
+    reports_collection = client['universal-dashboard']['reports']
+    for key_ in reports:
+        # insert report 18 to mongodb
+        report18 = reports[key_][REPORT18]
+        report18['_id'] = key_ * 100 + 18
+        reports_collection.insert_one(report18)
+        # insert report 24 to mongodb
+        report24 = reports[key_][REPORT24]
+        report24['_id'] = key_ * 100 + 24
+        reports_collection.insert_one(report24)
+    print("writing to mongodb --- %s seconds ---" % (ctime.time() - start_time))
+
 
 
 if __name__ == '__main__':
-    start_time = ctime.time()
     main()
-    print("--- %s seconds ---" % (ctime.time() - start_time))
+
