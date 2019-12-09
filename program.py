@@ -72,17 +72,17 @@ def is_in_report_18(time_):
 
 def main():
     start_time = ctime.time()
-    REPORT18 = 'Report 18'
-    REPORT24 = 'Report 24'
+    REPORT18 = 'Report18'
+    REPORT24 = 'Report24'
     IDLE = 'Idle'
     SETUP_DRYRUN = 'SetupDryrun'
     MACHINING = 'Machining'
     OFF = 'Off'
-    LOAD_UNLOAD = 'Loading /unloading'
-    FIXTURE_INSTALLATION = 'Fixture installation'
-    ERDT = 'Engineering repair development trials'
-    PREVENTIVE_MAINTENANCE = 'Preventive maintenance'
-    BREAK_DOWN = 'Break down'
+    LOAD_UNLOAD = 'Loadingunloading'
+    FIXTURE_INSTALLATION = 'Fixtureinstallation'
+    ERDT = 'Engineeringrepairdevelopmenttrials'
+    PREVENTIVE_MAINTENANCE = 'Preventivemaintenance'
+    BREAK_DOWN = 'Breakdown'
     reports = {}
     all_reason_codes = [LOAD_UNLOAD, FIXTURE_INSTALLATION, ERDT, PREVENTIVE_MAINTENANCE, BREAK_DOWN]
     bar_key_18_hour_shift_exception = [ERDT, SETUP_DRYRUN, MACHINING]
