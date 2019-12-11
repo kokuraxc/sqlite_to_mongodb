@@ -99,12 +99,13 @@ def main():
             monthly_key = dt.year * 100 + dt.month
             daily_key = dt.year * 10000 + dt.month * 100 + dt.day
             # print(monthly_key, daily_key)
-            reason_code = row[4]
+            reason_code = row[4].replace(' ', '').lower()
 
-            if reason_code in all_reason_codes:
-                rs_key = reason_code
-            else:
-                rs_key = None
+            rs_key = None
+            # if reason_code in [x.lower() for x in all_reason_codes]:
+            for reasonCode_ in all_reason_codes:
+                if reason_code == reasonCode_.lower():
+                    rs_key = reasonCode_
 
             if row[0] == 1:
                 status_key = IDLE
